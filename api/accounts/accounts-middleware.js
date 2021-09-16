@@ -32,18 +32,18 @@ exports.checkAccountNameUnique = async (req, res, next) => {
   if (existing) {
     next({ status: 400, message: "that name is taken" });
   } else {
-    next()
+    next();
   }
 };
 
 exports.checkAccountId = (req, res, next) => {
   Accounts.getById(req.params.id)
     .then((account) => {
-      if (account) {
+      if (!account) {
+        return next({ status: 404, message: "account not found" });
+      } else {
         req.account = account;
         next();
-      } else {
-        next({ status: 404, message: "account not found" });
       }
     })
     .catch(next);
