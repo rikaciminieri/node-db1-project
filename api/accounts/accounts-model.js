@@ -8,11 +8,11 @@ const getById = (id) => {
   return db("accounts").where("id", id).first();
 };
 
-async function create(account) {
+const create = async (account) => {
   const [id] = await db("accounts").insert(account);
-  const newPost = await getById(id);
-  return newPost;
-}
+  console.log(id)
+  return getById(id);
+};
 
 const updateById = (id, account) => {
   db("accounts")
@@ -23,9 +23,9 @@ const updateById = (id, account) => {
     });
 };
 
-async function deleteById(id) {
-  deletedPost = db("account").where(id, "id");
-  deletedPost.delete();
+const deleteById = async (id) => {
+  deletedPost = await db("account").where(id, "id");
+  await deletedPost.delete();
   return deletedPost;
 }
 

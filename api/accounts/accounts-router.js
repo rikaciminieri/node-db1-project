@@ -1,9 +1,5 @@
 const router = require("express").Router();
-const {
-  checkAccountId,
-  checkAccountPayload,
-  checkAccountNameUnique,
-} = require("./accounts-middleware");
+const {checkAccountPayload, checkAccountId, checkAccountNameUnique} = require('./accounts-middleware')
 const Accounts = require("./accounts-model");
 
 router.get("/", (req, res, next) => {
@@ -15,7 +11,6 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/:id", checkAccountId, (req, res, next) => {
-  console.log("get by id")
   res.status(200).json(req.account);
 });
 
@@ -24,6 +19,7 @@ router.post(
   checkAccountPayload,
   checkAccountNameUnique,
   (req, res, next) => {
+    console.log("HERE")
     Accounts.create(req.body)
       .then((newAccount) => {
         res.status(201).json(newAccount);
@@ -48,9 +44,5 @@ router.delete("/:id", checkAccountId, (req, res, next) => {
   .catch(next)
 });
 
-router.use((err, req, res, next) => {
-  // eslint-disable-line
-  // DO YOUR MAGIC
-});
 
 module.exports = router;
