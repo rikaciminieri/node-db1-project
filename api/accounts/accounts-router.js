@@ -1,5 +1,9 @@
 const router = require("express").Router();
-const {checkAccountPayload, checkAccountId, checkAccountNameUnique} = require('./accounts-middleware')
+const {
+  checkAccountPayload,
+  checkAccountId,
+  checkAccountNameUnique,
+} = require("./accounts-middleware");
 const Accounts = require("./accounts-model");
 
 router.get("/", (req, res, next) => {
@@ -19,7 +23,6 @@ router.post(
   checkAccountPayload,
   checkAccountNameUnique,
   (req, res, next) => {
-    console.log("HERE")
     Accounts.create(req.body)
       .then((newAccount) => {
         res.status(201).json(newAccount);
@@ -28,21 +31,22 @@ router.post(
   }
 );
 
-router.put("/:id", checkAccountId, (req, res, next) => {
+router.put("/:id", checkAccountId, checkAccountPayload, (req, res, next) => {
   Accounts.updateById(req.params.id, req.body)
-    .then((updatedAccount) => {
-      res.status(200).json(updatedAccount);
+    .then((updated) => {
+      console.log("Hi");
+      console.log(updated);
+      res.status(200).json(updated);
     })
     .catch(next);
 });
 
 router.delete("/:id", checkAccountId, (req, res, next) => {
   Accounts.deleteById(req.params.id)
-  .then(deleted => {
-    res.status(204)
-  })
-  .catch(next)
+    .then((deleted) => {
+      res.status(200).json(req.account);
+    })
+    .catch(next);
 });
-
 
 module.exports = router;

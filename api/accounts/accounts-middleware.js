@@ -3,8 +3,8 @@ const db = require("../../data/db-config");
 
 const checkAccountPayload = (req, res, next) => {
   const { name, budget } = req.body;
-  console.log(name, budget)
-  if (!name || !budget) {
+
+  if (!name || typeof budget === "undefined") {
     next({ status: 400, message: "name and budget are required" });
   } else if (typeof name !== "string") {
     next({ status: 400, message: "name of account must be a string" });
@@ -24,12 +24,11 @@ const checkAccountPayload = (req, res, next) => {
 };
 
 const checkAccountNameUnique = async (req, res, next) => {
+  const name = req.body.name;
+
   try {
-    console.log("in here")
-    const existing = await db("account")
-      .where("name", req.body.name.trim())
-      .first();
-      console.log(existing)
+    const existing = await db("accounts").where("name", name).first();
+
     if (existing) {
       next({ status: 400, message: "that name is taken" });
     } else {
